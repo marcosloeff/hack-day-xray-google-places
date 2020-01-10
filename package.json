@@ -1,0 +1,20 @@
+{
+  "name": "hackday-xray-google-places",
+  "version": "1.0.0",
+  "description": "Google Places API for HackDat Home X-Ray ",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "start-debug": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Marcos Loeff",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  },
+  "dependencies": {
+    "axios": "^0.19.1",
+    "express": "^4.17.1"
+  }
+}
