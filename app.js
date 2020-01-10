@@ -5,13 +5,35 @@ var path = require('path');
 var xmlReader = require('read-xml');
 const express = require('express');
 var convert = require('xml-js');
+const csv = require('csv-parser');
+
 const app = express();
 
 
 app.use('/', (req, res, next) => {
 	console.log('New request!');
-	let { lat, lng, type, radius, key, pagetoken, kml } = req.query;
-	if (kml && lat) {
+	let { lat, lng, type, radius, key, pagetoken, kml, unit_id } = req.query;
+	if (unit_id) {
+		let unit_found = false;
+		fs.createReadStream('valuation_and_view.csv')
+			.pipe(csv())
+			.on('data', (row) => {
+				if (row.unit_id === unit_id && row.living_room_view_score.length > 0){
+					const value = row.living_room_view_score.substr(0,1);
+					res.status(200).json({value: value, description: row.living_room_view_score});
+					unit_found = true;
+					next();
+				}
+			})
+			.on('end', () => {
+				console.log('CSV file successfully processed');
+				if (unit_found == false) {
+					res.status(200).json({});
+					next();
+				}
+			});
+	}
+	else if (kml && lat) {
 		xmlReader.readXML(fs.readFileSync('mapa_ruido.kml'), function (err, data) {
 			if (err) {
 				console.error(err);
